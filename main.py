@@ -79,7 +79,7 @@ cto_agent = Agent(
 
 researcher_agent = Agent(
     role="Market Research Specialist",
-    goal="Conduct thorough, up-to-date research on market trends, competitor analysis, and consumer needs based on the CTO's specific instructions.",
+    goal="Conduct thorough, up-to-date research on market trends, competitor analysis, consumer needs, **and sustainable coffee sourcing/supply chain logistics**.",
     backstory="A fast, efficient researcher using modern search tools to find the most accurate and relevant data.",
     llm=worker_llm, 
     tools=[search_tool] if search_tool else [],
@@ -116,40 +116,50 @@ task_plan = Task(
 
 # Task 2: CTO's Orchestration and Delegation Task
 # This task is given to the CTO, who will internally delegate to the Researcher and Writer.
-task_orchestrate = Task(
+task_orchestrate_and_write = Task(
     description=(
         "You have the ProjectPlan from the CEO available in your context."
-        "Your job is to orchestrate the execution. First, delegate a focused 'Research Task' to the Researcher Agent. "
-        "Use the Researcher's output as context to then delegate a 'Final Report Task' to the Writer Agent. "
-        "The final output of this task must be the complete, consolidated research findings before the final report is written."
+        "Your job is to orchestrate the execution. First, delegate a focused **'Market Research & Sourcing Task'** "
+        "to the **Researcher Agent**, specifically instructing them to research competitive pricing, digital strategy examples, "
+        "AND sustainable European coffee supply chains. "
+        "Once the research is complete (from the Researcher's output), you MUST "
+        "**synthesize all findings into a complete, executive-ready final report**. "
+        "The report must be professional, use markdown for formatting, and directly address all key deliverables in the plan. "
+        "**This final report must be the ENTIRE output of this task, saved to 'final_report.md'.**"
     ),
-    expected_output="A summary of the successful delegation flow and the complete, consolidated research findings that will be used for the final report.",
+    expected_output="A professionally written, 10-paragraph minimum, markdown report saved to 'final_report.md'.",
     agent=cto_agent,
     context=[task_plan],
-    # The CTO's job is to manage the flow and pass the *result* of that flow to the final task
+    output_file="final_report.md"
 )
 
 # Task 3: Writer's Final Report Task
-task_final_report = Task(
-    description=(
-        "Generate a complete, executive-ready final report based on all gathered research and the original ProjectPlan. "
-        "The report must be professional, use markdown for formatting, and directly address all key deliverables in the plan. "
-        "Use the consolidated research findings provided in your context."
-    ),
-    expected_output="A professionally written, 10-paragraph minimum, markdown report saved to 'final_report.md'.",
-    agent=writer_agent,
-    context=[task_orchestrate], # The context is the CTO's final, consolidated research findings
-    output_file="final_report.md"
-)
+# task_final_report = Task(
+#     description=(
+#         "Generate a complete, executive-ready final report based on all gathered research and the original ProjectPlan. "
+#         "The report must be professional, use markdown for formatting, and directly address all key deliverables in the plan. "
+#         "Use the consolidated research findings provided in your context."
+#     ),
+#     expected_output="A professionally written, 10-paragraph minimum, markdown report saved to 'final_report.md'.",
+#     agent=writer_agent,
+#     context=[task_orchestrate], # The context is the CTO's final, consolidated research findings
+#     output_file="final_report.md"
+# )
 
 
 # --- 5. CREATING AND RUNNING THE HIERARCHICAL CREW ---
 
-PROJECT_REQUEST = "Create a full market entry strategy for a new line of premium, sustainable coffee capsules targeting environmentally conscious consumers in major European cities."
+PROJECT_REQUEST = (
+    "Develop a **full-spectrum market entry and growth strategy** for a new line "
+    "of premium, sustainable coffee capsules in **Berlin and Amsterdam**. The strategy "
+    "must include: a comprehensive competitor analysis, a detailed pricing model, "
+    "a 12-month digital marketing plan (including content themes), and a **sourcing/supply chain recommendation**."
+)
+
 
 crew = Crew(
     agents=[cto_agent, researcher_agent, writer_agent],
-    tasks=[task_plan, task_orchestrate, task_final_report],
+    tasks=[task_plan, task_orchestrate_and_write],
     process=Process.hierarchical,  # KEY: Enables the manager/delegation pattern
     manager_agent=ceo_agent,       # KEY: Explicitly sets the top manager
     manager_llm=manager_llm,
