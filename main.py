@@ -48,7 +48,6 @@ except Exception:
     search_tool = None
     print("WARNING: SerperDevTool not available. Researcher will not be able to search the web.")
 
-
 # --- Manager Agents (allow_delegation=True) ---
 
 ceo_agent = Agent(
