@@ -11,7 +11,6 @@ load_dotenv()
 # --- 1. CONFIGURATION ---
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
-    # Serper is optional, but highly recommended for the researcher
     if not os.getenv("SERPER_API_KEY"):
          print("WARNING: SERPER_API_KEY not found. Researcher will be limited.")
     raise ValueError("GEMINI_API_KEY not found in .env file. Please set it.")
