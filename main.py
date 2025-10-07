@@ -15,7 +15,7 @@ if not GEMINI_API_KEY:
          print("WARNING: SERPER_API_KEY not found. Researcher will be limited.")
     raise ValueError("GEMINI_API_KEY not found in .env file. Please set it.")
 
-# MANAGER_MODEL = "gemini-2.5-flash"
+
 
 
 manager_llm = LLM(
