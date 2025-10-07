@@ -16,7 +16,7 @@ if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in .env file. Please set it.")
 
 # MANAGER_MODEL = "gemini-2.5-flash"
-# WORKER_MODEL = "gemini-2.5-flash"
+
 
 manager_llm = LLM(
     model="gemini/gemini-2.5-flash",
