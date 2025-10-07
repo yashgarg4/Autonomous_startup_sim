@@ -156,9 +156,9 @@ crew = Crew(
     agents=[cto_agent, researcher_agent, writer_agent],
     tasks=[task_plan, task_orchestrate_and_write],
     process=Process.hierarchical, 
-    manager_agent=ceo_agent,       # KEY: Explicitly sets the top manager
+    manager_agent=ceo_agent,   
     manager_llm=manager_llm,
-    verbose=True  # High verbosity shows all agent thought processes
+    verbose=True 
 )
 
 print("Starting the Autonomous Startup Simulator...")
